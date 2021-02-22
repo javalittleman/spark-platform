@@ -55,7 +55,7 @@ services:
     volumes:
       - ./data/minio/data:/data
     ports:
-      - 9001:9000
+      - 9009:9000
     environment:
       MINIO_ROOT_USER: minio
       MINIO_ROOT_PASSWORD: minio123
