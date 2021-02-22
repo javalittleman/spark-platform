@@ -6,7 +6,6 @@ node {
         'init=true'
     ]) {
 
-
         if(env.compile==true){
             stage('Build') {
                 ansiColor('vga'){
@@ -36,18 +35,39 @@ node {
         }
 
         stage('Deploy') {
-            // 初始化
-            if(env.init==true){
+
+            ansiColor('vga'){
+
+                // 初始化
+                if(env.init==true){
+                    sshPublisher(publishers: [
+                            sshPublisherDesc(configName: '192.168.108.81(prod)', transfers: [
+                            sshTransfer(cleanRemote: false, excludes: '',
+                            execCommand:
+                            '''
+                                cd /data/dockerapp/spark-platform
+                                docker-compose rm -svfa mysql redis nacos minio elk
+                                rm data/ -rf
+                                docker-compose up -d mysql redis nacos minio elk
+                                sleep 60
+                            ''',
+                            execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+',
+                            remoteDirectory: '',
+                            remoteDirectorySDF: false,
+                            // removePrefix: 'target',
+                            sourceFiles: '')
+                        ], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)
+                    ])
+                }
+
+                // 停止应用，为传输打包文件做准备
                 sshPublisher(publishers: [
                         sshPublisherDesc(configName: '192.168.108.81(prod)', transfers: [
                         sshTransfer(cleanRemote: false, excludes: '',
                         execCommand:
                         '''
                             cd /data/dockerapp/spark-platform
-                            docker-compose rm -svfa mysql redis nacos minio elk
-                            rm data/ -rf
-                            docker-compose up -d mysql redis nacos minio elk
-                            sleep 60
+                            docker-compose rm -svfa auth cms file flowable gateway quartz tx wx control biz
                         ''',
                         execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+',
                         remoteDirectory: '',
@@ -56,45 +76,27 @@ node {
                         sourceFiles: '')
                     ], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)
                 ])
-            }
 
-            // 停止应用，为传输打包文件做准备
-            sshPublisher(publishers: [
-                    sshPublisherDesc(configName: '192.168.108.81(prod)', transfers: [
-                    sshTransfer(cleanRemote: false, excludes: '',
-                    execCommand:
-                    '''
-                        cd /data/dockerapp/spark-platform
-                        docker-compose rm -svfa auth cms file flowable gateway quartz tx wx control biz
-                    ''',
-                    execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+',
-                    remoteDirectory: '',
-                    remoteDirectorySDF: false,
-                    // removePrefix: 'target',
-                    sourceFiles: '')
-                ], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)
-            ])
+                // 传输打包文件并启动应用
+                sshPublisher(publishers: [
+                        sshPublisherDesc(configName: '192.168.108.81(prod)', transfers: [
+                        sshTransfer(cleanRemote: false, excludes: '',
+                        execCommand:
+                        '''
+                            cd /data/dockerapp/spark-platform
+                            docker-compose up -d auth cms file flowable gateway quartz tx wx control biz
+                        ''',
+                        execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+',
+                        remoteDirectory: '/data/dockerapp/spark-platform',
+                        remoteDirectorySDF: false,
+                        // removePrefix: 'target',
+                        sourceFiles: '**/*.jar,docker*.*,**/*.sql')
+                    ], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)
+                ])
 
-            // 传输打包文件并启动应用
-            sshPublisher(publishers: [
-                    sshPublisherDesc(configName: '192.168.108.81(prod)', transfers: [
-                    sshTransfer(cleanRemote: false, excludes: '',
-                    execCommand:
-                    '''
-                        cd /data/dockerapp/spark-platform
-                        docker-compose up -d auth cms file flowable gateway quartz tx wx control biz
-                    ''',
-                    execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+',
-                    remoteDirectory: '/data/dockerapp/spark-platform',
-                    remoteDirectorySDF: false,
-                    // removePrefix: 'target',
-                    sourceFiles: '**/*.jar,docker*.*,**/*.sql')
-                ], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)
-            ])
-
-            ansiColor('vga'){
                 echo "构建成功！！！"
                 echo "站点：\033[45mhttp://prod.y.com:8088/\033[0m"
+
             }
 
         }
