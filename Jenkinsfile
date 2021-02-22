@@ -64,6 +64,7 @@ node {
                     execCommand:
                     '''
                         cd $appDir
+                        printenv
                         docker-compose rm -svfa admin auth cms file flowable gateway quartz tx wx control biz
                     ''',
                     execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+',
