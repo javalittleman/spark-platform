@@ -63,8 +63,8 @@
         <jackson-module-jaxb.veison>2.11.2</jackson-module-jaxb.veison>
         <easyexcel.version>2.2.3</easyexcel.version>
         <minio.version>7.1.4</minio.version>
-        <nacos-url>127.0.0.1:8848</nacos-url>
-        <logstash-url>localhost:4560</logstash-url>
+        <nacos-url>nacos:8848</nacos-url>
+        <logstash-url>elk:5044</logstash-url>
     </properties>
 
     <dependencies>

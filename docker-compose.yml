@@ -5,8 +5,8 @@ services:
     image: mysql:5.7.24
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-7luk4Bj9R844}
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-zyplayer_doc_manage}
-      MYSQL_USER: ${MYSQL_USER:-zyplayer}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-spark-dev}
+      MYSQL_USER: ${MYSQL_USER:-spark-dev}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-S0rCah295dFl}
       LANG: C.UTF-8
       TZ: Asia/Shanghai
@@ -14,16 +14,8 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime
       - $PWD/mysql:/var/lib/mysql
-      - ./zyplayer-doc-manage/src/main/resources/sql/全量建表语句.sql:/docker-entrypoint-initdb.d/全量建表语句.sql
+      - ./sql:/docker-entrypoint-initdb.d/
 
-#      - ./zyplayer-doc-manage/src/main/resources/sql/zyplayer_doc_manage.sql:/docker-entrypoint-initdb.d/zyplayer_doc_manage.1.0.0.sql
-#      - ./zyplayer-doc-manage/src/main/resources/sql/zyplayer_doc_manage.1.0.1.sql:/docker-entrypoint-initdb.d/zyplayer_doc_manage.1.0.1.sql
-#      - ./zyplayer-doc-manage/src/main/resources/sql/zyplayer_doc_manage.1.0.2.sql:/docker-entrypoint-initdb.d/zyplayer_doc_manage.1.0.2.sql
-#      - ./zyplayer-doc-manage/src/main/resources/sql/zyplayer_doc_manage.1.0.3.sql:/docker-entrypoint-initdb.d/zyplayer_doc_manage.1.0.3.sql
-#      - ./zyplayer-doc-manage/src/main/resources/sql/zyplayer_doc_manage.1.0.4.sql:/docker-entrypoint-initdb.d/zyplayer_doc_manage.1.0.4.sql
-#      - ./zyplayer-doc-manage/src/main/resources/sql/zyplayer_doc_manage.1.0.5.sql:/docker-entrypoint-initdb.d/zyplayer_doc_manage.1.0.5.sql
-#      - ./zyplayer-doc-manage/src/main/resources/sql/zyplayer_doc_manage.1.0.6.sql:/docker-entrypoint-initdb.d/zyplayer_doc_manage.1.0.6.sql
-#      - ./zyplayer-doc-manage/src/main/resources/sql/zyplayer_doc_manage.1.0.7.sql:/docker-entrypoint-initdb.d/zyplayer_doc_manage.1.0.7.sql
     command:
       --character-set-server=utf8mb4
       --collation-server=utf8mb4_general_ci
@@ -43,3 +35,59 @@ services:
     command: sh -c "java -jar dist/zyplayer-doc-manage.war"
     environment:
       - TZ=Asia/Shanghai
+
+  nacos:
+    image: nacos/nacos-server
+    restart: always
+    environment:
+      PREFER_HOST_MODE: hostname #是否支持 hostname	hostname/ip
+      MODE: standalone  # cluster/standalone
+      SPRING_DATASOURCE_PLATFORM: mysql
+      MYSQL_SERVICE_HOST: mysql
+      MYSQL_SERVICE_PORT: 3306
+      MYSQL_SERVICE_USER: root
+      MYSQL_SERVICE_PASSWORD: ${MYSQL_ROOT_PASSWORD:-7luk4Bj9R844}
+      MYSQL_SERVICE_DB_NAME: nacos
+    ports:
+      - 8848:8848
+      - 9555:9555
+
+  redis:
+    image: redis
+    restart: always
+    command: redis-server --requirepass ${REDIS_PASSWORD:-Y0CA6kQni4r4}
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+
+  minio:
+    image: minio/minio:latest
+    volumes:
+      - ./minio/data:/data
+    ports:
+      - 9000:9000
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123
+    command: minio/minio server /data
+
+  elk:
+    image: sebp/elk:661
+    restart: always
+    environment:
+      LS_HEAP_SIZE: "1g"
+      ES_JAVA_OPTS: "-Xms2g -Xmx2g"
+    volumes:
+      - ./elk/elasticsearch/data:/var/lib/elasticsearch
+      - ./elk/elasticsearch/plugins:/opt/elasticsearch/plugins
+      - ./elk/logstash/conf:/etc/logstash/conf.d
+      - ./elk/logstash/patterns:/opt/logstash/patterns
+      - ./elk/elasticsearch/conf/elasticsearch.yml:/etc/elasticsearch/elasticsearch.yml
+      - ./elk/elasticsearch/log:/var/log/elasticsearch
+      - ./elk/logstash/log:/var/log/logstash
+    ports:
+      - 5601:5601
+      - 9200:9200
+      - 9300:9300
+      - 5044:5044

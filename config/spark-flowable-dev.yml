@@ -2,7 +2,7 @@ spring:
   cloud:
     nacos:
       discovery:
-        ip: 127.0.0.1
+        ip: nacos
         port: ${server.port}
   freemarker:
     suffix: .html
@@ -15,9 +15,9 @@ spring:
       max-request-size: 100MB
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/flowable-dev?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC&nullCatalogMeansCurrent=true
-    username: root
-    password: 123456
+    url: jdbc:mysql://mysql:3306/flowable-dev?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC&nullCatalogMeansCurrent=true
+    username: spark-dev
+    password: S0rCah295dFl
     name: flowable-dev
     type: com.alibaba.druid.pool.DruidDataSource
     initial-size: 5
@@ -36,18 +36,18 @@ spring:
   boot:
     admin:
       client:
-        url: http://127.0.0.1:9002
+        url: http://elk:9002
         instance:
           prefer-ip: true
           service-url: http://${spring.cloud.nacos.discovery.ip}:${spring.cloud.nacos.discovery.port}
         username: spark
         password: spark
   redis:
-    host: 127.0.0.1
+    host: redis
     port: 6379
     timeout: 10000
     database: 0
-    password:
+    password: Y0CA6kQni4r4
     lettuce:
       pool:
         max-active: 300

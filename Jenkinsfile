@@ -26,35 +26,34 @@ node {
     //     }
     // }
 
-//    stage('Deploy') {
-//        sshPublisher(publishers: [
-//                sshPublisherDesc(configName: '192.168.108.81(prod)', transfers: [
-//                sshTransfer(cleanRemote: false, excludes: '',
-//                execCommand:
-//                '''
-//                    cd /data/dockerapp/Crown2
-//                    echo $PWD
-//                    # docker-compose up -d mysql es-single nacos
-//                    # docker-compose up -d mysql && sleep 60
-//                    # docker-compose rm -svfa mysql && rm mysql/ -rf && docker-compose up -d mysql && sleep 60
-//                    docker-compose rm -svfa app
-//                    rm dist -rf
-//                    mkdir dist -p
-//                    cp -r build/libs/crown2.jar dist/crown2.jar
-//                    docker-compose up -d app
-//                ''',
-//                execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+',
-//                remoteDirectory: '/data/dockerapp/Crown2',
-//                remoteDirectorySDF: false,
-//                // removePrefix: 'target',
-//                sourceFiles: '**/*.jar,docker*.*,**/*.sql')
-//            ], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)
-//        ])
-//        ansiColor('vga'){
-//            echo "构建成功！！！"
-//            echo "站点：\033[45mhttp://prod.y.com:8088/\033[0m"
-//        }
-//    }
+    stage('Deploy') {
+        sshPublisher(publishers: [
+                sshPublisherDesc(configName: '192.168.108.81(prod)', transfers: [
+                sshTransfer(cleanRemote: false, excludes: '',
+                execCommand:
+                '''
+                    cd /data/dockerapp/spark-platform
+                    echo $PWD
+                    docker-compose up -d mysql nacos elk minio && sleep 60
+                    # docker-compose rm -svfa mysql && rm mysql/ -rf && docker-compose up -d mysql && sleep 60
+                    docker-compose rm -svfa admin auth cms file flowable gateway quartz tx wx
+                    rm dist -rf
+                    mkdir dist -p
+                    # cp -r build/libs/spark-platform.jar dist/spark-platform.jar
+                    # docker-compose up -d admin auth cms file flowable gateway quartz tx wx
+                ''',
+                execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+',
+                remoteDirectory: '/data/dockerapp/spark-platform',
+                remoteDirectorySDF: false,
+                // removePrefix: 'target',
+                sourceFiles: '**/*.jar,docker*.*,**/*.sql')
+            ], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)
+        ])
+        ansiColor('vga'){
+            echo "构建成功！！！"
+            echo "站点：\033[45mhttp://prod.y.com:8088/\033[0m"
+        }
+    }
 
     stage('Results') {
         archiveArtifacts '**/*.jar'

@@ -1,12 +1,12 @@
 spring:
   redis:
-    host: 127.0.0.1
-    password:
+    host: redis
+    password: Y0CA6kQni4r4
     port: 6379
   cloud:
     nacos:
       discovery:
-        ip: 127.0.0.1
+        ip: nacos
         port: ${server.port}
     gateway:
       locator:
@@ -80,7 +80,7 @@ spring:
   boot:
     admin:
       client:
-        url: http://127.0.0.1:9002
+        url: http://elk:9002
         instance:
           prefer-ip: true
           service-url: http://${spring.cloud.nacos.discovery.ip}:${spring.cloud.nacos.discovery.port}
