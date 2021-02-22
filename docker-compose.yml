@@ -13,7 +13,7 @@ services:
     restart: always
     volumes:
       - /etc/localtime:/etc/localtime
-      - $PWD/mysql:/var/lib/mysql
+      - $PWD/data/mysql:/var/lib/mysql
       - ./sql:/docker-entrypoint-initdb.d/
 
     command:
@@ -24,17 +24,6 @@ services:
       --max_allowed_packet=128M
       --log_timestamps=SYSTEM
       --sql-mode="STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION,NO_ZERO_IN_DATE,ERROR_FOR_DIVISION_BY_ZERO"
-
-  app:
-    image: java:8
-    working_dir: /usr/app/src
-    ports:
-      - 8083:8083
-    volumes:
-      - $PWD:/usr/app/src
-    command: sh -c "java -jar dist/zyplayer-doc-manage.war"
-    environment:
-      - TZ=Asia/Shanghai
 
   nacos:
     image: nacos/nacos-server
@@ -47,7 +36,7 @@ services:
       MYSQL_SERVICE_PORT: 3306
       MYSQL_SERVICE_USER: root
       MYSQL_SERVICE_PASSWORD: ${MYSQL_ROOT_PASSWORD:-7luk4Bj9R844}
-      MYSQL_SERVICE_DB_NAME: nacos
+      MYSQL_SERVICE_DB_NAME: spark-dev
     ports:
       - 8848:8848
       - 9555:9555
@@ -64,7 +53,7 @@ services:
   minio:
     image: minio/minio:latest
     volumes:
-      - ./minio/data:/data
+      - ./data/minio/data:/data
     ports:
       - 9000:9000
     environment:
@@ -79,15 +68,140 @@ services:
       LS_HEAP_SIZE: "1g"
       ES_JAVA_OPTS: "-Xms2g -Xmx2g"
     volumes:
-      - ./elk/elasticsearch/data:/var/lib/elasticsearch
-      - ./elk/elasticsearch/plugins:/opt/elasticsearch/plugins
-      - ./elk/logstash/conf:/etc/logstash/conf.d
-      - ./elk/logstash/patterns:/opt/logstash/patterns
-      - ./elk/elasticsearch/conf/elasticsearch.yml:/etc/elasticsearch/elasticsearch.yml
-      - ./elk/elasticsearch/log:/var/log/elasticsearch
-      - ./elk/logstash/log:/var/log/logstash
+      - ./data/elk/elasticsearch/data:/var/lib/elasticsearch
+      - ./data/elk/elasticsearch/plugins:/opt/elasticsearch/plugins
+      - ./data/elk/logstash/conf:/etc/logstash/conf.d
+      - ./data/elk/logstash/patterns:/opt/logstash/patterns
+      - ./data/elk/elasticsearch/conf/elasticsearch.yml:/etc/elasticsearch/elasticsearch.yml
+      - ./data/elk/elasticsearch/log:/var/log/elasticsearch
+      - ./data/elk/logstash/log:/var/log/logstash
     ports:
       - 5601:5601
       - 9200:9200
       - 9300:9300
       - 5044:5044
+
+# ---------------------------------------------
+
+  biz:
+    image: java:8
+    working_dir: /usr/app/src
+    ports:
+      - 9020:9020
+    volumes:
+      - $PWD:/usr/app/src
+      - /etc/localtime:/etc/localtime:ro
+    command: sh -c "java -jar spark-admin/spark-admin-biz/target/spark-admin-biz.jar"
+    environment:
+      - TZ=Asia/Shanghai
+
+  auth:
+    image: java:8
+    working_dir: /usr/app/src
+    ports:
+      - 9010:9010
+    volumes:
+      - $PWD:/usr/app/src
+      - /etc/localtime:/etc/localtime:ro
+    command: sh -c "java -jar spark-auth/target/spark-auth.jar"
+    environment:
+      - TZ=Asia/Shanghai
+
+  cms:
+    image: java:8
+    working_dir: /usr/app/src
+    ports:
+      - 9040:9040
+    volumes:
+      - $PWD:/usr/app/src
+      - /etc/localtime:/etc/localtime:ro
+    command: sh -c "java -jar spark-cms/target/spark-cms.jar"
+    environment:
+      - TZ=Asia/Shanghai
+
+  control:
+    image: java:8
+    working_dir: /usr/app/src
+    ports:
+      - 9002:9002
+    volumes:
+      - $PWD:/usr/app/src
+      - /etc/localtime:/etc/localtime:ro
+    command: sh -c "java -jar spark-control/target/spark-control.jar"
+    environment:
+      - TZ=Asia/Shanghai
+
+  file:
+    image: java:8
+    working_dir: /usr/app/src
+    ports:
+      - 9080:9080
+    volumes:
+      - $PWD:/usr/app/src
+      - /etc/localtime:/etc/localtime:ro
+    command: sh -c "java -jar spark-file/spark-file-biz/target/spark-file-biz.jar"
+    environment:
+      - TZ=Asia/Shanghai
+
+  flowable:
+    image: java:8
+    working_dir: /usr/app/src
+    ports:
+      - 9030:9030
+    volumes:
+      - $PWD:/usr/app/src
+      - /etc/localtime:/etc/localtime:ro
+    command: sh -c "java -jar spark-flowable/spark-flowable-biz/target/spark-flowable-biz.jar"
+    environment:
+      - TZ=Asia/Shanghai
+
+  gateway:
+    image: java:8
+    working_dir: /usr/app/src
+    ports:
+      - 9001:9001
+    volumes:
+      - $PWD:/usr/app/src
+      - /etc/localtime:/etc/localtime:ro
+    command: sh -c "java -jar spark-gateway/target/spark-gateway.jar"
+    environment:
+      - TZ=Asia/Shanghai
+
+  quartz:
+    image: java:8
+    working_dir: /usr/app/src
+    ports:
+      - 9050:9050
+    volumes:
+      - $PWD:/usr/app/src
+      - /etc/localtime:/etc/localtime:ro
+    command: sh -c "java -jar spark-quartz/target/spark-quartz.jar"
+    environment:
+      - TZ=Asia/Shanghai
+
+  tx:
+    image: java:8
+    working_dir: /usr/app/src
+    ports:
+      - 9003:9003
+    volumes:
+      - $PWD:/usr/app/src
+      - /etc/localtime:/etc/localtime:ro
+    command: sh -c "java -jar spark-tx-manager/target/spark-tx-manager.jar"
+    environment:
+      - TZ=Asia/Shanghai
+
+  wx:
+    image: java:8
+    working_dir: /usr/app/src
+    ports:
+      - 9090:9090
+    volumes:
+      - $PWD:/usr/app/src
+      - /etc/localtime:/etc/localtime:ro
+    command: sh -c "java -jar spark-wx-shop/spark-wx-shop-biz/target/spark-wx-shop-biz.jar"
+    environment:
+      - TZ=Asia/Shanghai
+
+
+
