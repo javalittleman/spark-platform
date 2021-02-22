@@ -36,6 +36,7 @@ node {
         }
 
         stage('Deploy') {
+            sh printenv
             // 初始化
             if(env.init){
                 sshPublisher(publishers: [
