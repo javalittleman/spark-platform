@@ -37,13 +37,14 @@ node {
             ]) {
 
 
-            if(init){
+            if($init){
                 sshPublisher(publishers: [
                         sshPublisherDesc(configName: '192.168.108.81(prod)', transfers: [
                         sshTransfer(cleanRemote: false, excludes: '',
                         execCommand:
                         '''
                             cd $appDir
+                            printenv
                             docker-compose rm -svfa mysql redis nacos minio elk
                             sleep 60
                             rm data/ -rf
