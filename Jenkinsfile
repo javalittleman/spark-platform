@@ -64,7 +64,7 @@ node {
                             '''
                                 cd /data/dockerapp/spark-platform
                                 printenv
-                                docker-compose rm -svfa admin auth cms file flowable gateway quartz tx wx control biz
+                                docker-compose rm -svfa auth cms file flowable gateway quartz tx wx control biz
                             ''',
                             execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+',
                             remoteDirectory: '',
@@ -81,7 +81,7 @@ node {
                             execCommand:
                             '''
                                 cd /data/dockerapp/spark-platform
-                                docker-compose up -d admin auth cms file flowable gateway quartz tx wx control biz
+                                docker-compose up -d auth cms file flowable gateway quartz tx wx control biz
                             ''',
                             execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+',
                             remoteDirectory: '/data/dockerapp/spark-platform',

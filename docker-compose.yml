@@ -38,8 +38,8 @@ services:
       MYSQL_SERVICE_PASSWORD: ${MYSQL_ROOT_PASSWORD:-7luk4Bj9R844}
       MYSQL_SERVICE_DB_NAME: spark-dev
     ports:
-      - 8848:8848
-      - 9555:9555
+      - 8849:8848
+      - 9556:9555
 
   redis:
     image: redis
@@ -55,7 +55,7 @@ services:
     volumes:
       - ./data/minio/data:/data
     ports:
-      - 9000:9000
+      - 9001:9000
     environment:
       MINIO_ROOT_USER: minio
       MINIO_ROOT_PASSWORD: minio123
