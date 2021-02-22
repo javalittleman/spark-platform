@@ -32,7 +32,6 @@ node {
         withEnv([
             'init=true',
             'DB_ENGINE=sqlite',
-            'appDir=/data/dockerapp/spark-platform',
             'sshServer=192.168.108.81(prod)'
             ]) {
 
@@ -43,7 +42,7 @@ node {
                                 sshTransfer(cleanRemote: false, excludes: '',
                                 execCommand:
                                 '''
-                                    cd $appDir
+                                    cd /data/dockerapp/spark-platform
                                     printenv
                                     docker-compose rm -svfa mysql redis nacos minio elk
                                     sleep 60
@@ -63,7 +62,7 @@ node {
                             sshTransfer(cleanRemote: false, excludes: '',
                             execCommand:
                             '''
-                                cd $appDir
+                                cd /data/dockerapp/spark-platform
                                 printenv
                                 docker-compose rm -svfa admin auth cms file flowable gateway quartz tx wx control biz
                             ''',
@@ -81,7 +80,7 @@ node {
                             sshTransfer(cleanRemote: false, excludes: '',
                             execCommand:
                             '''
-                                cd $appDir
+                                cd /data/dockerapp/spark-platform
                                 docker-compose up -d admin auth cms file flowable gateway quartz tx wx control biz
                             ''',
                             execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+',
