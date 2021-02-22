@@ -37,60 +37,60 @@ node {
             ]) {
 
 
-            if($init){
-                sshPublisher(publishers: [
-                        sshPublisherDesc(configName: '192.168.108.81(prod)', transfers: [
-                        sshTransfer(cleanRemote: false, excludes: '',
-                        execCommand:
-                        '''
-                            cd $appDir
-                            printenv
-                            docker-compose rm -svfa mysql redis nacos minio elk
-                            sleep 60
-                            rm data/ -rf
-                            docker-compose up -d mysql redis nacos minio elk
-                        ''',
-                        execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+',
-                        remoteDirectory: '',
-                        remoteDirectorySDF: false,
-                        // removePrefix: 'target',
-                        sourceFiles: '')
-                    ], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)
-                ])
-            }
-            sshPublisher(publishers: [
-                    sshPublisherDesc(configName: '192.168.108.81(prod)', transfers: [
-                    sshTransfer(cleanRemote: false, excludes: '',
-                    execCommand:
-                    '''
-                        cd $appDir
-                        printenv
-                        docker-compose rm -svfa admin auth cms file flowable gateway quartz tx wx control biz
-                    ''',
-                    execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+',
-                    remoteDirectory: '',
-                    remoteDirectorySDF: false,
-                    // removePrefix: 'target',
-                    sourceFiles: '')
-                ], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)
-            ])
+                    if(env.init){
+                        sshPublisher(publishers: [
+                                sshPublisherDesc(configName: '192.168.108.81(prod)', transfers: [
+                                sshTransfer(cleanRemote: false, excludes: '',
+                                execCommand:
+                                '''
+                                    cd $appDir
+                                    printenv
+                                    docker-compose rm -svfa mysql redis nacos minio elk
+                                    sleep 60
+                                    rm data/ -rf
+                                    docker-compose up -d mysql redis nacos minio elk
+                                ''',
+                                execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+',
+                                remoteDirectory: '',
+                                remoteDirectorySDF: false,
+                                // removePrefix: 'target',
+                                sourceFiles: '')
+                            ], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)
+                        ])
+                    }
+                    sshPublisher(publishers: [
+                            sshPublisherDesc(configName: '192.168.108.81(prod)', transfers: [
+                            sshTransfer(cleanRemote: false, excludes: '',
+                            execCommand:
+                            '''
+                                cd $appDir
+                                printenv
+                                docker-compose rm -svfa admin auth cms file flowable gateway quartz tx wx control biz
+                            ''',
+                            execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+',
+                            remoteDirectory: '',
+                            remoteDirectorySDF: false,
+                            // removePrefix: 'target',
+                            sourceFiles: '')
+                        ], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)
+                    ])
 
 
-            sshPublisher(publishers: [
-                    sshPublisherDesc(configName: '192.168.108.81(prod)', transfers: [
-                    sshTransfer(cleanRemote: false, excludes: '',
-                    execCommand:
-                    '''
-                        cd $appDir
-                        docker-compose up -d admin auth cms file flowable gateway quartz tx wx control biz
-                    ''',
-                    execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+',
-                    remoteDirectory: '/data/dockerapp/spark-platform',
-                    remoteDirectorySDF: false,
-                    // removePrefix: 'target',
-                    sourceFiles: '**/*.jar,docker*.*,**/*.sql')
-                ], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)
-            ])
+                    sshPublisher(publishers: [
+                            sshPublisherDesc(configName: '192.168.108.81(prod)', transfers: [
+                            sshTransfer(cleanRemote: false, excludes: '',
+                            execCommand:
+                            '''
+                                cd $appDir
+                                docker-compose up -d admin auth cms file flowable gateway quartz tx wx control biz
+                            ''',
+                            execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+',
+                            remoteDirectory: '/data/dockerapp/spark-platform',
+                            remoteDirectorySDF: false,
+                            // removePrefix: 'target',
+                            sourceFiles: '**/*.jar,docker*.*,**/*.sql')
+                        ], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)
+                    ])
 
 
 
