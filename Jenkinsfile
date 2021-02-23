@@ -5,7 +5,7 @@ node {
         'compile=false',
         'init=true'
     ]) {
-
+        sh "printenv"
         if(env.compile==true){
             stage('Build') {
                 ansiColor('vga'){
@@ -40,6 +40,7 @@ node {
 
                 // 初始化
                 if(env.init==true){
+                    sh "初始化"
                     sshPublisher(publishers: [
                             sshPublisherDesc(configName: '192.168.108.81(prod)', transfers: [
                             sshTransfer(cleanRemote: false, excludes: '',
@@ -61,6 +62,7 @@ node {
                 }
 
                 // 停止应用，为传输打包文件做准备
+                sh "停止应用，为传输打包文件做准备"
                 sshPublisher(publishers: [
                         sshPublisherDesc(configName: '192.168.108.81(prod)', transfers: [
                         sshTransfer(cleanRemote: false, excludes: '',
@@ -78,6 +80,7 @@ node {
                 ])
 
                 // 传输打包文件并启动应用
+                sh "传输打包文件并启动应用"
                 sshPublisher(publishers: [
                         sshPublisherDesc(configName: '192.168.108.81(prod)', transfers: [
                         sshTransfer(cleanRemote: false, excludes: '',
