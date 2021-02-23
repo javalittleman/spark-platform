@@ -62,19 +62,16 @@ services:
     command: server /data
 
   elk:
-    image: sebp/elk:661
+    image: sebp/elkx
     restart: always
     environment:
-      LS_HEAP_SIZE: "1g"
-      ES_JAVA_OPTS: "-Xms2g -Xmx2g"
-    volumes:
-      - ./data/elk/elasticsearch/data:/var/lib/elasticsearch
-      - ./data/elk/elasticsearch/plugins:/opt/elasticsearch/plugins
-      - ./data/elk/logstash/conf:/etc/logstash/conf.d
-      - ./data/elk/logstash/patterns:/opt/logstash/patterns
-      - ./data/elk/elasticsearch/conf/elasticsearch.yml:/etc/elasticsearch/elasticsearch.yml
-      - ./data/elk/elasticsearch/log:/var/log/elasticsearch
-      - ./data/elk/logstash/log:/var/log/logstash
+#      ELASTIC_BOOTSTRAP_PASSWORD: elastic
+      ELASTICSEARCH_USER: elastic
+      ELASTICSEARCH_PASSWORD: elastic
+      LOGSTASH_USER: elastic
+      LOGSTASH_PASSWORD: logstash
+      KIBANA_USER: elastic
+      KIBANA_PASSWORD: kibana
     ports:
       - 5601:5601
       - 9201:9200
