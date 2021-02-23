@@ -79,7 +79,7 @@ node {
                 ])
 
                 // 传输打包文件并启动应用
-                sh "传输打包文件并启动应用"
+                echo "传输打包文件并启动应用"
                 sshPublisher(publishers: [
                         sshPublisherDesc(configName: '192.168.108.81(prod)', transfers: [
                         sshTransfer(cleanRemote: false, excludes: '',
