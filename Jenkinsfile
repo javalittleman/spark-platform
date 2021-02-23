@@ -6,7 +6,6 @@ node {
         "init='true'"
     ]) {
         if(env.compile=='true'){
-            sh "printenv"
             stage('Build') {
                 ansiColor('vga'){
                     docker.image('maven:3.3.3').inside('-v /data/maven/repo:/root/.m2 -v /etc/localtime:/etc/localtime -v $WORKSPACE/settings.xml:/usr/share/maven/conf/settings.xml -e TZ=Asia/Shanghai') {
@@ -40,7 +39,7 @@ node {
 
                 // 初始化
                 if(env.init=='true'){
-                    sh "初始化"
+                    echo "初始化"
                     sshPublisher(publishers: [
                             sshPublisherDesc(configName: '192.168.108.81(prod)', transfers: [
                             sshTransfer(cleanRemote: false, excludes: '',
@@ -62,7 +61,7 @@ node {
                 }
 
                 // 停止应用，为传输打包文件做准备
-                sh "停止应用，为传输打包文件做准备"
+                echo "停止应用，为传输打包文件做准备"
                 sshPublisher(publishers: [
                         sshPublisherDesc(configName: '192.168.108.81(prod)', transfers: [
                         sshTransfer(cleanRemote: false, excludes: '',
