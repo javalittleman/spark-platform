@@ -65,13 +65,13 @@ services:
     image: sebp/elkx
     restart: always
     environment:
-#      ELASTIC_BOOTSTRAP_PASSWORD: elastic
+#      ELASTIC_BOOTSTRAP_PASSWORD: changeme
       ELASTICSEARCH_USER: elastic
-      ELASTICSEARCH_PASSWORD: elastic
+      ELASTICSEARCH_PASSWORD: changeme
       LOGSTASH_USER: elastic
-      LOGSTASH_PASSWORD: logstash
-      KIBANA_USER: elastic
-      KIBANA_PASSWORD: kibana
+      LOGSTASH_PASSWORD: changeme
+      KIBANA_USER: kibana
+      KIBANA_PASSWORD: changeme
     ports:
       - 5601:5601
       - 9201:9200
