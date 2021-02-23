@@ -26,7 +26,7 @@ services:
       --sql-mode="STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION,NO_ZERO_IN_DATE,ERROR_FOR_DIVISION_BY_ZERO"
 
   nacos:
-    image: nacos/nacos-server
+    image: nacos/nacos-server:latest
     restart: always
     environment:
       PREFER_HOST_MODE: hostname #是否支持 hostname	hostname/ip
