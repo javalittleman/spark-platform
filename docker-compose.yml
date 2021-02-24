@@ -25,6 +25,20 @@ services:
       --log_timestamps=SYSTEM
       --sql-mode="STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION,NO_ZERO_IN_DATE,ERROR_FOR_DIVISION_BY_ZERO"
 
+  nacos-mysql:
+    image: nacos/nacos-mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-7luk4Bj9R844}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-nacos-mysql}
+      MYSQL_USER: ${MYSQL_USER:-nacos-mysql}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-S0rCah295dFl}
+      LANG: C.UTF-8
+      TZ: Asia/Shanghai
+    restart: always
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - $PWD/data/nacos-mysql:/var/lib/mysql
+
   nacos:
     image: nacos/nacos-server:latest
     restart: always
@@ -32,11 +46,11 @@ services:
       PREFER_HOST_MODE: hostname #是否支持 hostname	hostname/ip
       MODE: standalone  # cluster/standalone
       SPRING_DATASOURCE_PLATFORM: mysql
-      MYSQL_SERVICE_HOST: mysql
+      MYSQL_SERVICE_HOST: nacos-mysql
       MYSQL_SERVICE_PORT: 3306
-      MYSQL_SERVICE_USER: root
-      MYSQL_SERVICE_PASSWORD: ${MYSQL_ROOT_PASSWORD:-7luk4Bj9R844}
-      MYSQL_SERVICE_DB_NAME: spark-dev
+      MYSQL_SERVICE_USER: nacos-mysql
+      MYSQL_SERVICE_PASSWORD: ${MYSQL_ROOT_PASSWORD:-S0rCah295dFl}
+      MYSQL_SERVICE_DB_NAME: nacos-mysql
     ports:
       - 8849:8848
       - 9556:9555

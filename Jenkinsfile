@@ -47,9 +47,9 @@ node {
                             execCommand:
                             '''
                                 cd /data/dockerapp/spark-platform
-                                docker-compose rm -svfa mysql redis nacos minio elk
+                                docker-compose rm -svfa mysql redis nacos nacos-mysql minio elk
                                 rm data/ -rf
-                                docker-compose up -d mysql redis nacos minio elk
+                                docker-compose up -d mysql redis nacos nacos-mysql minio elk
                                 sleep 60
                             ''',
                             execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+',
