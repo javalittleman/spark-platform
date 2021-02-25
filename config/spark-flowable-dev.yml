@@ -15,7 +15,7 @@ spring:
       max-request-size: 100MB
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://mysql:3306/flowable-dev?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC&nullCatalogMeansCurrent=true
+    url: jdbc:mysql://mysql:3306/spark-dev?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC&nullCatalogMeansCurrent=true
     username: spark-dev
     password: S0rCah295dFl
     name: flowable-dev
@@ -36,7 +36,7 @@ spring:
   boot:
     admin:
       client:
-        url: http://elk:9002
+        url: http://elk:9200
         instance:
           prefer-ip: true
           service-url: http://${spring.cloud.nacos.discovery.ip}:${spring.cloud.nacos.discovery.port}

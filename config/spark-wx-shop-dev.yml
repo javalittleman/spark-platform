@@ -3,7 +3,7 @@ spring:
     nacos:
       discovery:
         ip: nacos
-port: ${server.port}
+        port: ${server.port}
   jackson:
     default-property-inclusion: non_null
   datasource:
@@ -30,10 +30,10 @@ port: ${server.port}
   boot:
     admin:
       client:
-        url: http://elk:9002
+        url: http://elk:9200
         instance:
           prefer-ip: true
-          service-url: service-url: http://${spring.cloud.nacos.discovery.ip}:${spring.cloud.nacos.discovery.port}
+          service-url: http://${spring.cloud.nacos.discovery.ip}:${spring.cloud.nacos.discovery.port}
         username: spark
         password: spark
   redis:

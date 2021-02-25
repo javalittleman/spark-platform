@@ -30,7 +30,7 @@ spring:
   boot:
     admin:
       client:
-        url: http://elk:9002
+        url: http://elk:9200
         instance:
           prefer-ip: true
           service-url: http://${spring.cloud.nacos.discovery.ip}:${spring.cloud.nacos.discovery.port}
